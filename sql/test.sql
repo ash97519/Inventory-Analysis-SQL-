@@ -1,1 +1,37 @@
+-- Question 1 SQL commands
+How accurate is SpenMart’s current inventory, based on a comparison between the ERP stock list and the recent physical count?/*
+Fixed values in [STOCK COUNT OCT 31] table where 0 was O and 1 was I.
 
+UPDATE [STOCK COUNT OCT 31]
+SET STOCK_COUNT_Oct_31 = 70
+WHERE product_id = 10240
+
+UPDATE [STOCK COUNT OCT 31]
+SET STOCK_COUNT_Oct_31 = 19
+WHERE product_id = 10241
+
+-- Rounded 3.9 value to 4, assumes 3.9 was meant to be 4 and not 39.
+UPDATE [STOCK COUNT OCT 31]
+SET STOCK_COUNT_Oct_31 = 4
+WHERE product_id = 10104
+
+-- Converted STOCK_COUNT_Oct_31 to INT.
+ALTER TABLE [STOCK COUNT OCT 31]
+ALTER COLUMN STOCK_COUNT_Oct_31 INT
+
+-- Deleted outlier data point from STOCK COUNT OCT 31
+UPDATE [STOCK COUNT OCT 31] 
+SET STOCK_COUNT_Oct_31 = 0 
+WHERE STOCK_COUNT_Oct_31 = 444444
+
+-- Made new table called Stock_Comparison
+SELECT [SpenMart Product Information].product_id, [SpenMart Product Information].quantity_in_stock, [STOCK COUNT OCT 31].STOCK_COUNT_Oct_31
+INTO Stock_Comparison 
+FROM [SpenMart Product Information]
+INNER JOIN [STOCK COUNT OCT 31]
+ON [SpenMart Product Information].product_id = [STOCK COUNT OCT 31].product_id
+
+-- Counted all product_id’s where values in STOCK_COUNT_Oct_31 and quantity_in_stock columns are equivalent. Null values are not included in the count.
+SELECT Count(product_id) AS Number_of_Products
+FROM [Stock_Comparison]
+WHERE STOCK_COUNT_Oct_31 = quantity_in_stock 
