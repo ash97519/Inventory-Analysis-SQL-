@@ -3,7 +3,7 @@
 ## Overview
 This project presents an end-to-end **SQL-based business analysis** of SpenMart’s retail operations, focusing on **inventory accuracy, sales performance, customer behavior, and operational optimization**. The analysis uses ERP inventory data, physical stock counts, sales transactions, and customer records to generate actionable business insights and technical recommendations.
 
-[SQL_queries](./sql}
+[SQL_queries](./sql)
 
 ## Findings, Insights, and Recommendations
 
