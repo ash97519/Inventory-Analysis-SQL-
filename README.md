@@ -5,83 +5,111 @@ This project presents an end-to-end **SQL-based business analysis** of SpenMart�
 
 [SQL_queries](./sql)
 
-## Findings, Insights, and Recommendations
+## Key Findings & Insights
 
-### Inventory Accuracy
-**How accurate is SpenMart’s current inventory compared to the physical stock count?**
+### Inventory Accuracy Analysis
+**Business Question:** How accurate is SpenMart’s ERP inventory compared to physical stock counts?
 
-- Compared the `STOCK COUNT OCT 31` table with the `SpenMart Product Information` table  
-- Identified **262 matching product records out of 301**, resulting in an **87% inventory accuracy rate**
-- Detected and corrected a major outlier (`product_id = 10092`) with an invalid value of `444444`, normalized to `0`
+- Compared Stock_Count_Oct_31 with ERP product inventory records
+- Identified 262 matching products out of 301, resulting in an 87% inventory accuracy rate
+- Detected 39 mismatched records across overstatements and understatements
+- Identified a critical data anomaly for product_id = 10092, where an invalid value of 444444 distorted inventory variance; the value was normalized to 0
+- NULL and inconsistent numeric entries contributed to data integrity risk
 
-**Recommendations**
-- Enforce a **single source of truth** by linking stock tables via `product_id` (primary key)
-- Update inventory values only in the stock count table
-- Replace NULL stock values with `0` for clarity
-- Restrict stock values using `INT(3)` to prevent invalid entries
-- Require end-of-day stock verification by a second reviewer
+**Insight:**  
+A small number of manual data entry errors can significantly distort inventory metrics, financial reporting, and replenishment decisions.
 
 
 
-### Revenue & High-Value Customers
-**Which products and customers drive the most revenue?**
+### Revenue & High-Value Customer Analysis
+**Business Question:** Which products and customers contribute the most revenue?
 
-- Identified top revenue-generating products:
-  - `Item_Number 10013` – *Home Theater System*
-  - `Item_Number 10158` – *Noise Meter*
-  - Both generated **over $2,000 in revenue**
-- Identified **7 high-value customers** spending over **$1,900 each**
-- These customers represent **3.5% of the customer base (7/200)**
+- Top revenue-generating products:
+  - Item 10013 – Home Theater System (>$2,000)
+  - Item 10158 – Noise Meter (>$2,000)
+- Identified 7 high-value customers with lifetime spending above $1,900
+- These customers represent 3.5% of the total customer base (7 of 200)
 
-**Recommendations**
-- Increase marketing focus and product variety for top-performing items
-- Introduce a **customer rewards program** to retain and incentivize high-value customers
+**Insight:**  
+Revenue concentration among a small customer segment highlights opportunities for targeted retention and personalized marketing.
 
 
 
-### Regional Performance
-**Which states should scale operations up or down?**
+### Regional Performance Analysis
+**Business Question:** Which states should scale operations up or down?
 
-**Scale Up**
-- Florida, California, Ohio, Texas  
-- Each generated approximately **$20,000 in revenue** and **100 purchases**
-- Significant gap compared to the 4th-highest-performing state
+<img width="953" height="454" alt="image" src="https://github.com/user-attachments/assets/30a14aa7-0ee8-45d8-ad85-91d3f3b33bbc" />
 
-**Scale Down**
-- Connecticut, Oklahoma, North Dakota  
-- Each generated **less than $1,000 in total revenue**
+**Scale-Up States:**
+- Florida, California, Ohio, Texas
+- Each generated approximately $20,000 in revenue and around 100 purchases
+- Clear performance gap compared to mid- and low-performing states
 
-**Recommendations**
-- Expand marketing, promotions, and physical presence in high-performing states
-- Shift low-performing states toward **online-only sales** to reduce overhead
+**Scale-Down States:**
+- Connecticut, Oklahoma, North Dakota
+- Each generated less than $1,000 in total revenue
+
+**Insight:**  
+Geographic demand is uneven, indicating inefficient allocation of inventory and marketing resources in low-performing regions.
 
 
 
 ### Inventory Risk & Opportunity Cost
-**Are there missed opportunities due to inventory issues?**
+**Business Question:** Are inventory issues causing missed revenue opportunities?
 
-- Found **17 out-of-stock items** (0 or NULL values), representing **5.6% of inventory**
-- Average price per out-of-stock item: **$32.94**
-- Estimated **annual opportunity loss: $12,023**
+- Identified 17 out-of-stock products (0 or NULL inventory values)
+- Represents 5.6% of total inventory
+- Average price per affected item: $32.94
+- Estimated annual opportunity loss: $12,023
 
-**Recommendations**
-- Implement **safety stock thresholds** (e.g., reorder at ≤ 5 units)
-- Calculate average daily sales to automate reorder timing
-- Create automated alerts to prevent stockouts before they occur
+<img width="255" height="228" alt="image" src="https://github.com/user-attachments/assets/005b2f82-4589-4ae3-aac0-5064216beec8" />
+
+**Insight:**  
+Unmonitored stockouts can compound into significant annual revenue losses.
 
 
 
-## Maintenance and Integration Recommendations
+## Recommendations
 
-- Normalize database structure using a shared `product_id`
-- Apply data validation rules to prevent incorrect inputs
-- Standardize customer, product, and state identifiers across tables
-- Implement automated checks for:
-  - Missing values
-  - Duplicates
-  - Outliers
-  - Misspellings
-- Use automated **low-stock alerts** to protect revenue and improve reliability
+### IT & Data Governance
+- Enforce a single source of truth by linking all inventory-related tables via product_id.
+- Restrict inventory updates to the physical stock count table.
+- Replace NULL stock values with 0 for consistency.
+- Apply data validation rules including numeric-only inputs and integer constraints (e.g., INT(3)).
+- Implement automated checks for missing values, duplicates, outliers, and inconsistent identifiers.
 
+
+
+### Inventory & Operations
+- Implement safety stock thresholds (e.g., reorder when stock ≤ 5 units).
+- Use average daily sales to automate reorder timing.
+- Deploy automated low-stock alerts.
+- Require end-of-day inventory verification by a second reviewer to reduce manual errors.
+
+
+
+### Marketing & Customer Strategy
+- Increase product variety and promotional focus on top-performing items.
+- Introduce a customer rewards or loyalty program targeting high-value customers.
+- Use purchase history to support personalized recommendations and repeat purchases.
+
+
+
+### Regional Strategy
+- High-performing states: Increase inventory depth, fulfillment capacity, and regional promotions.
+- Low-performing states: Reduce physical inventory exposure and shift toward online-only sales models to lower overhead.
+
+
+
+## Maintenance & System Integration Recommendations
+- Normalize the database schema by enforcing a shared `product_id` as the primary key across all inventory, sales, and stock count tables.
+- Apply strict data validation rules to prevent incorrect or non-numeric inputs at the database level.
+- Standardize customer, product, and state identifiers across all tables to ensure consistent joins and reporting.
+- Implement automated data quality checks to detect:
+  - Missing or NULL values
+  - Duplicate records
+  - Statistical outliers
+  - Misspellings and inconsistent categorical values
+- Deploy automated low-stock alerts to proactively prevent stockouts, protect revenue, and improve inventory reliability.
 
 
