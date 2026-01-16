@@ -1,6 +1,6 @@
 -- Question 1 SQL commands
-How accurate is SpenMart’s current inventory, based on a comparison between the ERP stock list and the recent physical count?/*
-Fixed values in [STOCK COUNT OCT 31] table where 0 was O and 1 was I.
+-- How accurate is SpenMart’s current inventory, based on a comparison between the ERP stock list and the recent physical count?/*
+-- Fixed values in [STOCK COUNT OCT 31] table where 0 was O and 1 was I.
 
 UPDATE [STOCK COUNT OCT 31]
 SET STOCK_COUNT_Oct_31 = 70
